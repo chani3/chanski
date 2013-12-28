@@ -3,12 +3,15 @@ package ca.chani.chanski;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -20,13 +23,14 @@ import ca.chani.chanski.dummy.DummyContent;
  * Activities containing this fragment MUST implement the callbacks
  * interface.
  */
-public class JournalFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class JournalFragment extends Fragment implements AbsListView.OnItemClickListener, TextView.OnEditorActionListener {
     private static String TAG = "JournalFragment";
 
     private OnFragmentInteractionListener mListener;
 
     private AbsListView mListView;
     private ListAdapter mAdapter;
+    private EditText input;
 
     public static JournalFragment newInstance() {
         JournalFragment fragment = new JournalFragment();
@@ -60,6 +64,9 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+
+        input = (EditText) view.findViewById(R.id.editText);
+        input.setOnEditorActionListener(this);
 
         return view;
     }
@@ -102,6 +109,15 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         if (emptyText instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        Log.e(TAG, String.format("editor action: %d %s", actionId, input.getText()));
+        //TODO save text
+
+        input.setText("");
+        return true;
     }
 
     /**

@@ -5,3 +5,11 @@ show journal timestamps
 
 plan todo UI
 
+plan logging
+
+plan pw
+
+tabs -> actionbar?
+plan combo features
+backups?
+

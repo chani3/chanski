@@ -1,0 +1,7 @@
+
+investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboard-is-not-hiding-on-actionbar-tab-change
+save input text - bundle/args?
+show journal timestamps
+
+plan todo UI
+

@@ -30,8 +30,7 @@ public class JournalAdapter extends SimpleCursorAdapter  implements LoaderManage
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Uri uri = Uri.parse("content://" + JournalProvider.URI);
-        CursorLoader loader = new CursorLoader(context, uri, PROJECTION, null, null, null);
+        CursorLoader loader = new CursorLoader(context, JournalProvider.CONTENT_URI, PROJECTION, null, null, null);
         Log.d(TAG, String.format("made loader: %s", loader));
         return loader;
     }

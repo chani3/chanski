@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -20,8 +21,11 @@ class DatabaseHelper extends SQLiteOpenHelper{
     public static final String JOURNAL_DATE = "date";
     public static final String JOURNAL_TEXT = "msg";
 
+    private Context context;
+
     public DatabaseHelper(Context context) {
         super(context, "database.db", null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -45,5 +49,7 @@ class DatabaseHelper extends SQLiteOpenHelper{
 
         SQLiteDatabase db = getWritableDatabase();
         db.insert(JOURNAL_TABLE, null, values);
+
+        context.getContentResolver().notifyChange(JournalProvider.CONTENT_URI, null);
     }
 }

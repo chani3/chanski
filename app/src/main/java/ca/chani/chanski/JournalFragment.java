@@ -114,10 +114,16 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         Log.e(TAG, String.format("editor action: %d %s", actionId, input.getText()));
-        //TODO save text
+        saveJournalEntry(input.getText().toString());
 
         input.setText("");
         return true;
+    }
+
+    private void saveJournalEntry(String text) {
+        //TODO caching?
+        DatabaseHelper helper = new DatabaseHelper(getActivity());
+        helper.addJournalEntry(text);
     }
 
     /**

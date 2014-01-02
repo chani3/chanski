@@ -3,7 +3,17 @@ investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboa
 save input text - bundle/args?
 show journal timestamps
 
-plan todo UI
+todo UI:
+-basic named items
+-completed
+-exact dates
+-date buckets system
+-details, priority.. status? (delegated, waiting, etc)
+-tags
+-custom resolution (done, wontfix, dup, etc)
+swipe: http://stackoverflow.com/questions/5481814/listview-horizontal-fling-gesture
+
+
 
 plan logging
 

@@ -30,16 +30,18 @@ public class DatabaseProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, DatabaseHelper.TODOS.TABLE, TODOS_CODE);
     }
 
+    private DatabaseHelper helper;
+
     @Override
     public boolean onCreate() {
         Log.d(TAG, "onCreate " + this);
+        helper = new DatabaseHelper(getContext());
         return true;
     }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Log.d(TAG, "query " + uri);
-        DatabaseHelper helper = new DatabaseHelper(getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.query(uri2table(uri), projection, selection, selectionArgs, null, null, sortOrder);
 
@@ -77,8 +79,6 @@ public class DatabaseProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        //FIXME should I be keeping the helper..?
-        DatabaseHelper helper = new DatabaseHelper(getContext());
         SQLiteDatabase db = helper.getWritableDatabase();
 
         String timestampField = uri2tsCol(uri);

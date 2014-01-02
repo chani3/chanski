@@ -101,7 +101,7 @@ public class TodoFragment extends Fragment implements AbsListView.OnItemClickLis
         //TODO caching?
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.TODOS.NAME, text);
-        getActivity().getContentResolver().insert(DatabaseProvider.TODOS_URI, values);
+        getActivity().getContentResolver().insert(DatabaseHelper.TODOS.URI, values);
     }
 
     public interface OnFragmentInteractionListener {

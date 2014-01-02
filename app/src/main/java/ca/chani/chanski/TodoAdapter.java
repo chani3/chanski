@@ -29,7 +29,7 @@ public class TodoAdapter extends SimpleCursorAdapter  implements LoaderManager.L
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = new CursorLoader(context, DatabaseProvider.TODOS_URI, PROJECTION, null, null, null);
+        CursorLoader loader = new CursorLoader(context, DatabaseHelper.TODOS.URI, PROJECTION, null, null, null);
         Log.d(TAG, String.format("made loader: %s", loader));
         return loader;
     }

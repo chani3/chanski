@@ -16,11 +16,7 @@ import java.util.Calendar;
  */
 public class DatabaseProvider extends ContentProvider {
     private static String TAG = "DatabaseProvider";
-
     private static String AUTHORITY = "ca.chani.chanski";
-    private static Uri BASE_URI = Uri.parse("content://" + AUTHORITY);
-    public static Uri JOURNAL_URI = Uri.withAppendedPath(BASE_URI, DatabaseHelper.JOURNAL.TABLE);
-    public static Uri TODOS_URI = Uri.withAppendedPath(BASE_URI, DatabaseHelper.TODOS.TABLE);
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int JOURNAL_CODE = 10;

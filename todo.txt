@@ -4,7 +4,6 @@ save input text - bundle/args?
 show journal timestamps
 
 cleanup:
--uris to tables?
 -better fragment/activity interface
 
 todo UI:

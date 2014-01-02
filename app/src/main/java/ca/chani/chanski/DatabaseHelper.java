@@ -3,6 +3,7 @@ package ca.chani.chanski;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -13,6 +14,7 @@ import java.util.Calendar;
 class DatabaseHelper extends SQLiteOpenHelper{
     private static String TAG = "DatabaseHelper";
     private static final int DATABASE_VERSION = 2;
+    private static Uri BASE_URI = Uri.parse("content://ca.chani.chanski");
 
     public static final String ID = "_id";
     public static final Journal JOURNAL = new Journal();
@@ -44,12 +46,14 @@ class DatabaseHelper extends SQLiteOpenHelper{
     private static abstract class AbstractTable {
         public final String TABLE;
         public final String[] DEFAULT_COLS;
+        public final Uri URI;
 
         protected String createSql;
 
         protected AbstractTable(String table, String[] default_cols) {
             TABLE = table;
             DEFAULT_COLS = default_cols;
+            URI = Uri.withAppendedPath(BASE_URI, table);
         }
 
         public void onCreate(SQLiteDatabase db) {

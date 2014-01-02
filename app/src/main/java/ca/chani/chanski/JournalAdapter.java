@@ -29,7 +29,7 @@ public class JournalAdapter extends SimpleCursorAdapter  implements LoaderManage
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = new CursorLoader(context, DatabaseProvider.JOURNAL_URI, PROJECTION, null, null, null);
+        CursorLoader loader = new CursorLoader(context, DatabaseHelper.JOURNAL.URI, PROJECTION, null, null, null);
         Log.d(TAG, String.format("made loader: %s", loader));
         return loader;
     }

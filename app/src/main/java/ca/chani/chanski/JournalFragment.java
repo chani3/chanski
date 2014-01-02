@@ -111,7 +111,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         //TODO caching?
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.JOURNAL.TEXT, text);
-        getActivity().getContentResolver().insert(DatabaseProvider.JOURNAL_URI, values);
+        getActivity().getContentResolver().insert(DatabaseHelper.JOURNAL.URI, values);
     }
 
     /**

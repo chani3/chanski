@@ -2,6 +2,7 @@ package ca.chani.chanski;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -98,8 +99,9 @@ public class TodoFragment extends Fragment implements AbsListView.OnItemClickLis
 
     private void addTodo(String text) {
         //TODO caching?
-        DatabaseHelper helper = new DatabaseHelper(getActivity());
-        helper.addTodo(text);
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.TODOS.NAME, text);
+        getActivity().getContentResolver().insert(DatabaseProvider.TODOS_URI, values);
     }
 
     public interface OnFragmentInteractionListener {

@@ -2,6 +2,7 @@ package ca.chani.chanski;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -108,8 +109,9 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     private void saveJournalEntry(String text) {
         //TODO caching?
-        DatabaseHelper helper = new DatabaseHelper(getActivity());
-        helper.addJournalEntry(text);
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.JOURNAL.TEXT, text);
+        getActivity().getContentResolver().insert(DatabaseProvider.JOURNAL_URI, values);
     }
 
     /**

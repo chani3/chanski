@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.Calendar;
+
 /**
  * Created by chani on 2013-12-28.
  * TODO turn this into a generic dbprovider
@@ -56,6 +58,17 @@ public class DatabaseProvider extends ContentProvider {
         }
     }
 
+    private String uri2tsCol(Uri uri) {
+        switch (uriMatcher.match(uri)) {
+            case JOURNAL_CODE:
+                return DatabaseHelper.JOURNAL.DATE;
+            case TODOS_CODE:
+                return DatabaseHelper.TODOS.CREATED;
+            default:
+                return null;
+        }
+    }
+
     @Override
     public String getType(Uri uri) {
         Log.d(TAG, "getType");
@@ -64,7 +77,20 @@ public class DatabaseProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        //FIXME should I be keeping the helper..?
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String timestampField = uri2tsCol(uri);
+        if (timestampField != null) {
+            values.put(timestampField, Calendar.getInstance().getTimeInMillis());
+        }
+
+        long id = db.insert(uri2table(uri), null, values);
+        getContext().getContentResolver().notifyChange(uri, null);
+        Uri ret = Uri.withAppendedPath(uri, String.valueOf(id));
+        Log.d(TAG, ret.toString());
+        return ret;
     }
 
     @Override

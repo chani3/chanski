@@ -1,6 +1,5 @@
 package ca.chani.chanski;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -40,29 +39,6 @@ class DatabaseHelper extends SQLiteOpenHelper{
 
         assert (newVersion == 2);
         TODOS.onCreate(db);
-    }
-
-    //TODO this probably belongs elsewhere?
-    public void addJournalEntry(String text) {
-        ContentValues values = new ContentValues();
-        values.put(JOURNAL.DATE, Calendar.getInstance().getTimeInMillis());
-        values.put(JOURNAL.TEXT, text);
-
-        SQLiteDatabase db = getWritableDatabase();
-        db.insert(JOURNAL.TABLE, null, values);
-
-        context.getContentResolver().notifyChange(DatabaseProvider.JOURNAL_URI, null);
-    }
-    //TODO this probably belongs elsewhere?
-    public void addTodo(String text) {
-        ContentValues values = new ContentValues();
-        values.put(TODOS.CREATED, Calendar.getInstance().getTimeInMillis());
-        values.put(TODOS.NAME, text);
-
-        SQLiteDatabase db = getWritableDatabase();
-        db.insert(TODOS.TABLE, null, values);
-
-        context.getContentResolver().notifyChange(DatabaseProvider.TODOS_URI, null);
     }
 
     private static abstract class AbstractTable {

@@ -3,9 +3,14 @@ investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboa
 save input text - bundle/args?
 show journal timestamps
 
+cleanup:
+-move insert statements to provider
+-uris to tables?
+-better fragment/activity interface
+
 todo UI:
--basic named items
 -completed
+-item editing
 -exact dates
 -date buckets system
 -details, priority.. status? (delegated, waiting, etc)

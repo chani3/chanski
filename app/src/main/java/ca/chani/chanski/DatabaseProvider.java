@@ -31,7 +31,7 @@ public class DatabaseProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         Log.d(TAG, "onCreate " + this);
-        return false;
+        return true;
     }
 
     @Override

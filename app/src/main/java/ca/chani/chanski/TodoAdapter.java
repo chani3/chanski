@@ -12,15 +12,15 @@ import android.widget.SimpleCursorAdapter;
 /**
  * Created by chani on 2013-12-28.
  */
-public class JournalAdapter extends SimpleCursorAdapter  implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static String TAG = "JournalAdapter";
+public class TodoAdapter extends SimpleCursorAdapter  implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static String TAG = "TodoAdapter";
     private Context context;
 
-    static final String[] PROJECTION = DatabaseHelper.JOURNAL.DEFAULT_COLS;
-    static final String[] FROM_COLS = new String[] {DatabaseHelper.JOURNAL.TEXT};
+    static final String[] PROJECTION = DatabaseHelper.TODOS.DEFAULT_COLS;
+    static final String[] FROM_COLS = new String[] {DatabaseHelper.TODOS.NAME};
     static final int[] TO_VIEWS = new int[] {android.R.id.text1};
 
-    public JournalAdapter(Context context, LoaderManager loaderManager) {
+    public TodoAdapter(Context context, LoaderManager loaderManager) {
         super(context, android.R.layout.simple_list_item_1, null, FROM_COLS, TO_VIEWS, 0);
         this.context = context;
 
@@ -29,7 +29,7 @@ public class JournalAdapter extends SimpleCursorAdapter  implements LoaderManage
     }
 
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        CursorLoader loader = new CursorLoader(context, DatabaseProvider.JOURNAL_URI, PROJECTION, null, null, null);
+        CursorLoader loader = new CursorLoader(context, DatabaseProvider.TODOS_URI, PROJECTION, null, null, null);
         Log.d(TAG, String.format("made loader: %s", loader));
         return loader;
     }

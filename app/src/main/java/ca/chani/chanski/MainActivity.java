@@ -18,7 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements ActionBar.TabListener, JournalFragment.OnFragmentInteractionListener {
+public class MainActivity extends Activity implements ActionBar.TabListener,
+        JournalFragment.OnFragmentInteractionListener, TodoFragment.OnFragmentInteractionListener {
     private static String TAG = "MainActivity";
 
     /**
@@ -131,10 +132,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Jou
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            if (position == 1) {
-                return JournalFragment.newInstance();
+            switch (position) {
+                case 0:
+                    return TodoFragment.newInstance();
+                case 1:
+                    return JournalFragment.newInstance();
+                default:
+                    return PlaceholderFragment.newInstance(position + 1);
             }
-            return PlaceholderFragment.newInstance(position + 1);
         }
 
         @Override

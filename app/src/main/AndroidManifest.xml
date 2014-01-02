@@ -19,7 +19,7 @@
 
         <provider
             android:authorities="ca.chani.chanski"
-            android:name=".JournalProvider"
+            android:name=".DatabaseProvider"
             android:exported="false"/>
     </application>
 

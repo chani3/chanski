@@ -113,7 +113,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener, Jou
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void onFragmentInteraction(long id) {
         Log.d(TAG, "click");
     }
 

@@ -13,7 +13,7 @@ import java.util.Calendar;
  */
 class DatabaseHelper extends SQLiteOpenHelper{
     private static String TAG = "DatabaseHelper";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static Uri BASE_URI = Uri.parse("content://ca.chani.chanski");
 
     public static final String ID = "_id";
@@ -39,8 +39,8 @@ class DatabaseHelper extends SQLiteOpenHelper{
         Log.d(TAG, String.format("upgrade %d to %d", oldVersion, newVersion));
         assert (newVersion - oldVersion == 1);
 
-        assert (newVersion == 2);
-        TODOS.onCreate(db);
+        assert (newVersion == 3);
+        db.execSQL(String.format("alter table %s add column %s text;", JOURNAL.TABLE, JOURNAL.MODE));
     }
 
     private static abstract class AbstractTable {
@@ -64,10 +64,11 @@ class DatabaseHelper extends SQLiteOpenHelper{
     public static class Journal extends AbstractTable {
         public static final String DATE = "date";
         public static final String TEXT = "msg";
+        public static final String MODE = "mode";
         Journal() {
             super("journal", new String[]{ID, DATE, TEXT});
-            createSql = String.format("create table %s (%s integer primary key, %s integer not null, %s text not null);",
-                    TABLE, ID, DATE, TEXT);
+            createSql = String.format("create table %s (%s integer primary key, %s integer not null, %s text not null, %s text);",
+                    TABLE, ID, DATE, TEXT, MODE);
         }
     }
 

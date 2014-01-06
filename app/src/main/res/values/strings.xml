@@ -7,4 +7,19 @@
     <string name="title_section3">Log</string>
     <string name="action_settings">Settings</string><string name="hint">...</string><string name="no_items">Nothing to see here!</string>
 
+
+    <string-array name="journal_modes_display">
+        <item>D</item>
+        <item>W</item>
+        <item>P</item>
+        <item>B</item>
+    </string-array>
+
+    <string-array name="journal_modes">
+        <item>default</item>
+        <item>worries</item>
+        <item>planning</item>
+        <item>braindump</item>
+    </string-array>
+
 </resources>

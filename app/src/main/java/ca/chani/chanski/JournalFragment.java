@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import ca.chani.chanski.dummy.DummyContent;
@@ -32,6 +33,8 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
     private AbsListView mListView;
     private ListAdapter mAdapter;
     private EditText input;
+    private Spinner modeSpinner;
+    private String[] modeValues;
 
     public static JournalFragment newInstance() {
         JournalFragment fragment = new JournalFragment();
@@ -52,6 +55,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         }*/
 
         mAdapter = new JournalAdapter(getActivity(), getLoaderManager());
+        modeValues = getResources().getStringArray(R.array.journal_modes);
     }
 
     @Override
@@ -67,6 +71,14 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
         input = (EditText) view.findViewById(R.id.editText);
         input.setOnEditorActionListener(this);
+
+        modeSpinner = (Spinner) view.findViewById(R.id.spinner);
+        //TODO: prettier spinner
+        //TODO: change text bg on spinner change
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.journal_modes_display, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        modeSpinner.setAdapter(adapter);
 
         return view;
     }
@@ -100,30 +112,20 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        Log.e(TAG, String.format("editor action: %d %s", actionId, input.getText()));
-        saveJournalEntry(input.getText().toString());
+        saveJournalEntry(input.getText().toString(), (int)modeSpinner.getSelectedItemId());
 
         input.setText("");
         return true;
     }
 
-    private void saveJournalEntry(String text) {
+    private void saveJournalEntry(String text, int mode) {
         //TODO caching?
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.JOURNAL.TEXT, text);
+        values.put(DatabaseHelper.JOURNAL.MODE, modeValues[mode]);
         getActivity().getContentResolver().insert(DatabaseHelper.JOURNAL.URI, values);
     }
 
-    /**
-    * This interface must be implemented by activities that contain this
-    * fragment to allow an interaction in this fragment to be communicated
-    * to the activity and potentially other fragments contained in that
-    * activity.
-    * <p>
-    * See the Android Training lesson <a href=
-    * "http://developer.android.com/training/basics/fragments/communicating.html"
-    * >Communicating with Other Fragments</a> for more information.
-    */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(long id);

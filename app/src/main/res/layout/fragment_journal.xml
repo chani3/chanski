@@ -33,17 +33,17 @@
         android:orientation="horizontal">
 
         <Spinner
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:layout_weight="1" />
+            android:id="@+id/spinner" />
 
         <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:hint="@string/hint"
-        android:inputType="text|textImeMultiLine|textCapSentences|textAutoCorrect" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/editText"
+            android:hint="@string/hint"
+            android:inputType="text|textImeMultiLine|textCapSentences|textAutoCorrect" />
 
     </LinearLayout>
 </LinearLayout>

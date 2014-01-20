@@ -8,12 +8,13 @@ investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboa
  starting to suspect that I'm doing something wrong there that's more important and might change tab-change behaviour.
 
 journal:
+*shade
 show journal timestamps
 prettier mode display
 decide how to use mode data
 
 todo UI:
--completed
+*-completed
 -item editing
 -exact dates
 -date buckets system
@@ -21,12 +22,13 @@ todo UI:
 -tags
 -custom resolution (done, wontfix, dup, etc)
 swipe: http://stackoverflow.com/questions/5481814/listview-horizontal-fling-gesture
+ (see viewpager-notes.txt)
 
 plan logging
 
 plan pw
 
-tabs -> actionbar?
+tabs -> actionbar? http://developer.android.com/reference/android/support/v4/view/ViewPager.html
 plan combo features
-backups?
+*backups?
 

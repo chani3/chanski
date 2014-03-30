@@ -6,6 +6,12 @@ investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboa
  I have a stash, not very helpful :/
  I think I was going to try and kick it on tab change, but... hitting enter gives a warning too.
  starting to suspect that I'm doing something wrong there that's more important and might change tab-change behaviour.
+try using the stuff I figured out at work - the onFragmentChange method (did I blog that?) and check the event handling in that edittext helper class...
+
+backups:
+make a web-app folder (in here or alongside?)
+get hello-world up
+copy paper todolist in here
 
 journal:
 *shade

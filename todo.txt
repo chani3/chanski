@@ -1,6 +1,7 @@
 
 cleanup:
 -better fragment/activity interface
+-fix asserts
 
 investigate keyboard issues - http://stackoverflow.com/questions/11663092/keyboard-is-not-hiding-on-actionbar-tab-change
  I have a stash, not very helpful :/

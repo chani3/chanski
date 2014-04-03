@@ -1,0 +1,59 @@
+
+k, tired of losing my notes, let's write here.
+the viewpager takes over swipes, so I was looking into how to replace it
+replace with what? and what were the problems?
+I think there was just another thingy, but... this would've been activity level, I see no code...
+I had a bunch of docs open, and there was an alternative, I think it was just manually switching tabs or something?
+but.. argh. time to look it up.
+
+oh, todolist has a new link about tabs -> actionbar. was I still considering another way altogether? the fuck?
+was that about switching how the tabs display or swipe or what?!?
+
+huh. lots of fragmenty things open. fragmentpageradapter... huh.
+
+looks like I was thinking about subclassing, or even ditching the gesture.
+okay well, in that case I'll keep the notes, stash the swipe, and just do buttons for now
+getting a nice uican come after the thing actually works. so long as the ui isn't outright irritating.
+
+oh and that weird stash? it's bundle-saving thingies. hmm. miiight end up needing that someday if the UI gets custom enough.
+
+ok, all cleaned up. :) now... what to work on first?
+backups, at least a *little* research.
+then I'll do some todolist functions for easy wins.
+
+android's backup service.. is.. not what I want. it's more for keeping a user's settings - ony saves to android and only used for new-device restore. not safe for sync, and eventually I'll want that.
+okay, so... first level of backup, just dump the .db file to my server..?
+that would let me poke at the format, even :)
+might not be as easy to restore, but, it'll be possible to extract at least. saves me worrying about the device itself.
+
+okay. so.. protocol options? https with node on the other side *might* work - post and all...
+ssh would be better but probably too hard..?
+it's not like I can *really* expect any of it to not be compromised, but, I can at least keep randoms out.
+man, I wish my phone could offer itself as an ssh server...
+I suppose nightly backups over the wifi to my desktop would be an option too, if I set up the desktop properly as a nice server...
+hrrm. if I end up doing a web service, how would I want the sync for that to go?
+99% of the time it'd be the app just adding stuffs. that'd be fairly straightforward.. and as time goes on it'll get more important to send only the added/changed things, not the whole db dump...
+but there'd also maaybe be the occasional push from the web side to download planning thingies
+hmm. 90% of the time I'll have both devices in my hands *and* both will be online; I can be quite lazy about that push, too.
+
+when you get right down to it, it's just bits on the wire really... but http is maybe better for a quick burst, ssh more meant for an open shell...
+also, accepting a POST? probably something I can do pretty easy. not sure if I even need node. it's the 's' that worries me.
+hmm. how to make node do s..?
+I'll need a private key, and a certificate.
+will android try to block my self-signed certificate...?
+
+k, I found a tutorial on self-signed https and android... http://blog.antoine.li/2010/10/22/android-trusting-ssl-certificates/ 
+have yet to read it.
+
+on the node side... wheee fun, node :) hope it can fit on my dinky server
+it'd start as just basic node+express and a post url; not even a get.
+hmm. and some basic auth?
+and... writing to a file without hurting anything could be... intesrting. .. b64 maybe?
+
+well crud, that tutorial looks... suboptimal.
+a better way: http://developer.android.com/training/articles/security-ssl.html
+
+whew. okay, so basically, I need to create myself an ssl key. assuming nothing's generated one already
+ok, I... might have one. what do I do with it, I wonder?
+well, set up a node thing, I guess?
+

@@ -27,6 +27,8 @@ import ca.chani.chanski.dummy.DummyContent;
  */
 public class JournalFragment extends Fragment implements AbsListView.OnItemClickListener, TextView.OnEditorActionListener {
     private static String TAG = "JournalFragment";
+    private static String BUNDLE_input = "input";
+    private static String BUNDLE_mode = "mode";
 
     private OnFragmentInteractionListener mListener;
 
@@ -80,6 +82,15 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         modeSpinner.setAdapter(adapter);
 
+        Log.e(TAG, "oncreateview!!");
+        if (savedInstanceState != null) {
+            Log.d(TAG, "restoring bundle");
+            /*
+            input.setText(savedInstanceState.getString(BUNDLE_input));
+            modeSpinner.setSelection(savedInstanceState.getInt(BUNDLE_mode));
+            */
+        }
+
         return view;
     }
 
@@ -100,6 +111,12 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         mListener = null;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_input, input.getText().toString());
+        outState.putInt(BUNDLE_mode, modeSpinner.getSelectedItemPosition());
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,7 +129,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        saveJournalEntry(input.getText().toString(), (int)modeSpinner.getSelectedItemId());
+        saveJournalEntry(input.getText().toString(), modeSpinner.getSelectedItemPosition());
 
         input.setText("");
         return true;
@@ -123,6 +140,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.JOURNAL.TEXT, text);
         values.put(DatabaseHelper.JOURNAL.MODE, modeValues[mode]);
+        Log.e(TAG, values.toString());
         getActivity().getContentResolver().insert(DatabaseHelper.JOURNAL.URI, values);
     }
 

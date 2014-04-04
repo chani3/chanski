@@ -5,8 +5,10 @@ import android.app.Fragment;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -29,6 +31,7 @@ public class TodoFragment extends Fragment implements AbsListView.OnItemClickLis
     private AbsListView mListView;
     private ListAdapter mAdapter;
     private EditText input;
+    private GestureDetector gestures;
 
     public static TodoFragment newInstance() {
         TodoFragment fragment = new TodoFragment();
@@ -42,6 +45,18 @@ public class TodoFragment extends Fragment implements AbsListView.OnItemClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new TodoAdapter(getActivity(), getLoaderManager());
+        gestures = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                Log.e(TAG, String.format("fling! %f", velocityX));
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true; //down is always good
+            }
+        });
     }
 
     @Override
@@ -54,6 +69,13 @@ public class TodoFragment extends Fragment implements AbsListView.OnItemClickLis
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
+
+        mListView.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View view, MotionEvent e) {
+                return gestures.onTouchEvent(e);
+                //return false;
+            }
+        });
 
         input = (EditText) view.findViewById(R.id.editText);
         input.setOnEditorActionListener(this);

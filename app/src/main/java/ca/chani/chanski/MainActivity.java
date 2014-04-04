@@ -61,6 +61,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                Log.e(TAG, "onPageSelected");
             }
         });
 
@@ -160,6 +161,12 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                     return getString(R.string.title_section3).toUpperCase(l);
             }
             return null;
+        }
+
+        @Override
+        public void finishUpdate(ViewGroup container) {
+            super.finishUpdate(container);
+            Log.e(TAG, "finishUpdate");
         }
     }
 

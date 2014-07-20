@@ -16,6 +16,7 @@ class DatabaseHelper extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 3;
     private static Uri BASE_URI = Uri.parse("content://ca.chani.chanski");
 
+    public static final String DATABASE_FILE = "database.db";
     public static final String ID = "_id";
     public static final Journal JOURNAL = new Journal();
     public static final Todo TODOS = new Todo();
@@ -23,7 +24,7 @@ class DatabaseHelper extends SQLiteOpenHelper{
     private Context context;
 
     public DatabaseHelper(Context context) {
-        super(context, "database.db", null, DATABASE_VERSION);
+        super(context, DATABASE_FILE, null, DATABASE_VERSION);
         this.context = context;
     }
 

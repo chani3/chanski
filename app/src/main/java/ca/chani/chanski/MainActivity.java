@@ -1,5 +1,14 @@
 package ca.chani.chanski;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -7,6 +16,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -17,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements ActionBar.TabListener,
         JournalFragment.OnFragmentInteractionListener, TodoFragment.OnFragmentInteractionListener {
@@ -92,10 +103,61 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch(id) {
+            case R.id.action_settings:
+                //TODO when we have settings
+                return true;
+            case R.id.action_backup:
+                doBackup();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doBackup() {
+        File sdcard = Environment.getExternalStorageDirectory();
+        File base = getFilesDir().getParentFile();
+        File dbs = new File(base, "databases");
+
+        File from = new File(dbs, DatabaseHelper.DATABASE_FILE);
+        File to = new File(sdcard, "chanski.db");
+
+        Log.d(TAG, String.format("backing up '%s' to '%s'", from.getPath(), to.getPath()));
+
+        InputStream is = null;
+        OutputStream os = null;
+        boolean success = false;
+        try {
+            is = new BufferedInputStream(new FileInputStream(from));
+            os = new BufferedOutputStream(new FileOutputStream(to));
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = is.read(buf)) > 0) {
+                os.write(buf, 0, len);
+            }
+
+            is.close();
+            os.close();
+            success = true;
+        } catch (FileNotFoundException e) {
+            Log.e(TAG, "backup failed :(");
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.e(TAG, "backup failed :(");
+            e.printStackTrace();
+        }
+
+        int message = success ? R.string.backup_success : R.string.backup_fail;
+        showMessage(message);
+
+    }
+
+    public void showMessage(int message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override

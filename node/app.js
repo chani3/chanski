@@ -1,6 +1,15 @@
 var express = require('express');
-var app = express();
+var https = require('https');
+var fs = require('fs');
 
+var PORT = 3000; //TODO make option
+
+var options = {
+  key: fs.readFileSync('keys/key.pem'),
+  cert: fs.readFileSync('keys/cert.pem')
+};
+
+var app = express();
 app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 
@@ -9,7 +18,5 @@ app.get('/', function(req, res){
   res.render('hello');
 });
 
-var server = app.listen(3000, function() {
-    console.log('Listening on port %d', server.address().port);
-});
 
+https.createServer(options, app).listen(PORT);

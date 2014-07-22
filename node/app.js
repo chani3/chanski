@@ -14,8 +14,12 @@ app.engine('.html', require('ejs').__express);
 app.set('view engine', 'html');
 
 
+var helloData = {
+  world: 'World'
+}
+
 app.get('/', function(req, res){
-  res.render('hello');
+  res.render('hello', helloData);
 });
 
 

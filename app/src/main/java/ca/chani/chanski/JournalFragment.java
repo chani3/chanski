@@ -3,6 +3,7 @@ package ca.chani.chanski;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,12 +21,6 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import ca.chani.chanski.dummy.DummyContent;
 
 /**
  * Journal UI Fragment, both display and input.
@@ -142,12 +137,12 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         //TODO some sort of helper class for this is probably worthwhile?
         Cursor cursor = (Cursor)mAdapter.getItem(position);
         String text = cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT));
-        int date = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.JOURNAL.DATE));
-        DateFormat df = DateFormat.getDateTimeInstance();
 
-        Log.d(TAG, text);
-        Log.d(TAG, df.format(new Date(date)));
-        //TODO send text to share intent
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, text);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, text));
     }
 
     @Override

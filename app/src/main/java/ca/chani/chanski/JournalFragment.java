@@ -3,6 +3,7 @@ package ca.chani.chanski;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -19,6 +20,10 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import ca.chani.chanski.dummy.DummyContent;
 
@@ -122,14 +127,27 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
     public boolean onContextItemSelected(MenuItem item) {
         Log.d(TAG, "selected contextmenu");
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Log.d(TAG, info.toString());
+        Log.d(TAG, String.format("id: %d position: %d", info.id, info.position));
+
         switch (item.getItemId()) {
             case R.id.action_share:
-                Log.d(TAG, "share");
+                shareItem(info.position);
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
+    }
+
+    private void shareItem(int position) {
+        //TODO some sort of helper class for this is probably worthwhile?
+        Cursor cursor = (Cursor)mAdapter.getItem(position);
+        String text = cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT));
+        int date = cursor.getInt(cursor.getColumnIndex(DatabaseHelper.JOURNAL.DATE));
+        DateFormat df = DateFormat.getDateTimeInstance();
+
+        Log.d(TAG, text);
+        Log.d(TAG, df.format(new Date(date)));
+        //TODO send text to share intent
     }
 
     @Override

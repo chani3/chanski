@@ -5,8 +5,11 @@ import android.app.Fragment;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -20,8 +23,8 @@ import android.widget.TextView;
 import ca.chani.chanski.dummy.DummyContent;
 
 /**
- * A fragment representing a list of Items.
- * <p />
+ * Journal UI Fragment, both display and input.
+ *
  * Activities containing this fragment MUST implement the callbacks
  * interface.
  */
@@ -68,6 +71,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
+        registerForContextMenu(mListView);
 
         input = (EditText) view.findViewById(R.id.editText);
         input.setOnEditorActionListener(this);
@@ -103,10 +107,28 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(id);
+        parent.showContextMenuForChild(view);
+        //note: context menu also triggers on longpress. leaving that for now, will enable action mode later.
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getActivity().getMenuInflater();
+        inflater.inflate(R.menu.journal_item, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        Log.d(TAG, "selected contextmenu");
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Log.d(TAG, info.toString());
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                Log.d(TAG, "share");
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
     }
 

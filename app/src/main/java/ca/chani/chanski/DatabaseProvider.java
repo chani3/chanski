@@ -16,7 +16,7 @@ import java.util.Calendar;
  */
 public class DatabaseProvider extends ContentProvider {
     private static String TAG = "DatabaseProvider";
-    private static String AUTHORITY = "ca.chani.chanski";
+    public static String AUTHORITY = "ca.chani.chanski";
 
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     private static final int JOURNAL_CODE = 10;

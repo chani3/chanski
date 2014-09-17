@@ -11,11 +11,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentResolver;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements ActionBar.TabListener,
         JournalFragment.OnFragmentInteractionListener, TodoFragment.OnFragmentInteractionListener {
     private static String TAG = "MainActivity";
+    private static final String ACCOUNT_TYPE = "chanski.chani.ca";
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -52,6 +56,8 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initSyncAccount();
 
         // Set up the action bar.
         final ActionBar actionBar = getActionBar();
@@ -86,6 +92,19 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                             .setText(mSectionsPagerAdapter.getPageTitle(i))
                             .setTabListener(this));
         }
+    }
+
+    private void initSyncAccount() {
+        Account account = new Account("chani", ACCOUNT_TYPE);
+        AccountManager accountManager = (AccountManager) getSystemService(ACCOUNT_SERVICE);
+        if (accountManager.addAccountExplicitly(account, null, null)) {
+            Log.e(TAG, "account created");
+        } else {
+            Log.e(TAG, "account not created");
+        }
+        accountManager.setAuthToken(account, "", "token"); //TODO real token
+        ContentResolver.setSyncAutomatically(account, DatabaseProvider.AUTHORITY, true); // TODO doublecheck this is what we want.
+
     }
 
 

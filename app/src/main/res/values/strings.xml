@@ -10,6 +10,7 @@
     <string name="backup_success">Backup complete!</string>
     <string name="backup_fail">Backup failed. :(</string>
     <string name="action_share">Share...</string>
+    <string name="action_force_sync">Force Sync</string>
 
 
     <string-array name="journal_modes_display">

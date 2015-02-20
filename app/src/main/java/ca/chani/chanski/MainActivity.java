@@ -128,8 +128,18 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                 return true;
             case R.id.action_backup:
                 doBackup();
+            case R.id.action_force_sync:
+                forceSync();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void forceSync() {
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_DO_NOT_RETRY, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        ContentResolver.requestSync(null, DatabaseProvider.AUTHORITY, bundle);
     }
 
     private void doBackup() {

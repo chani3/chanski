@@ -3,7 +3,7 @@
 #TODO: a testing framework would be nice.
 
 url="https://chani.ca:3000"
-ssl="--cacert curl-ca-bundle.crt"
+ssl="--cacert ../app/src/main/res/raw/cert.pem"
 sslUrl="$ssl $url"
 
 echo testing insecure https...

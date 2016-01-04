@@ -150,6 +150,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         File from = new File(dbs, DatabaseHelper.DATABASE_FILE);
         File to = new File(sdcard, "chanski.db");
 
+        boolean success = copyFile(from, to);
+
+        int message = success ? R.string.backup_success : R.string.backup_fail;
+        showMessage(message);
+    }
+
+    private boolean copyFile(File from, File to) {
         Log.d(TAG, String.format("backing up '%s' to '%s'", from.getPath(), to.getPath()));
 
         InputStream is = null;
@@ -169,16 +176,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
             os.close();
             success = true;
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "backup failed :(");
+            Log.e(TAG, "copy failed :(");
             e.printStackTrace();
         } catch (IOException e) {
-            Log.e(TAG, "backup failed :(");
+            Log.e(TAG, "copy failed :(");
             e.printStackTrace();
+        } finally {
+            return success;
         }
-
-        int message = success ? R.string.backup_success : R.string.backup_fail;
-        showMessage(message);
-
     }
 
     public void showMessage(int message) {

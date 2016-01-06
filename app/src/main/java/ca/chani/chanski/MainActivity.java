@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.Locale;
 
 import android.accounts.Account;
@@ -196,21 +197,14 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
     private boolean copyFile(File from, File to) {
         Log.d(TAG, String.format("copying '%s' to '%s'", from.getPath(), to.getPath()));
 
-        InputStream is = null;
-        OutputStream os = null;
         boolean success = false;
         try {
-            is = new BufferedInputStream(new FileInputStream(from));
-            os = new BufferedOutputStream(new FileOutputStream(to));
-
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = is.read(buf)) > 0) {
-                os.write(buf, 0, len);
-            }
-
-            is.close();
-            os.close();
+            //TODO: use locks and force() if they'll protect against DB syncing
+            FileChannel src = new FileInputStream(from).getChannel();
+            FileChannel dst = new FileOutputStream(to).getChannel();
+            dst.transferFrom(src, 0, src.size());
+            src.close();
+            dst.close();
             success = true;
         } catch (FileNotFoundException e) {
             Log.e(TAG, "copy failed :(");

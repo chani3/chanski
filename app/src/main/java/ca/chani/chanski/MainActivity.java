@@ -15,10 +15,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.os.Environment;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -128,10 +130,28 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                 return true;
             case R.id.action_backup:
                 doBackup();
+            case R.id.action_restore:
+                confirmRestore();
             case R.id.action_force_sync:
                 forceSync();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void confirmRestore() {
+        //restore, it is destructive. so, we confirm.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.restore_confirm);
+        builder.setPositiveButton(R.string.restore, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.d(TAG, "really restoring");
+                doRestore();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void forceSync() {
@@ -156,8 +176,25 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
         showMessage(message);
     }
 
+    private void doRestore() {
+        //FIXME what if another thread is writing to the db right now?
+        //FIXME what if the imported database is an older version? invalid?
+        File sdcard = Environment.getExternalStorageDirectory();
+        File base = getFilesDir().getParentFile();
+        File dbs = new File(base, "databases");
+
+        File to = new File(dbs, DatabaseHelper.DATABASE_FILE);
+        File from = new File(sdcard, "chanski.db");
+
+        boolean success = copyFile(from, to);
+
+        int message = success ? R.string.restore_success : R.string.restore_fail;
+        showMessage(message);
+        getContentResolver().notifyChange(DatabaseHelper.BASE_URI, null);
+    }
+
     private boolean copyFile(File from, File to) {
-        Log.d(TAG, String.format("backing up '%s' to '%s'", from.getPath(), to.getPath()));
+        Log.d(TAG, String.format("copying '%s' to '%s'", from.getPath(), to.getPath()));
 
         InputStream is = null;
         OutputStream os = null;

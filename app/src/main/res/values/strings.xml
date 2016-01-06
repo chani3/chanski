@@ -11,6 +11,11 @@
     <string name="backup_fail">Backup failed. :(</string>
     <string name="action_share">Share...</string>
     <string name="action_force_sync">Force Sync</string>
+    <string name="action_restore">Restore</string>
+    <string name="restore_confirm">Restore from SDCard/chanski.db?</string>
+    <string name="restore">Restore</string>
+    <string name="restore_success">Successfully Restored.</string>
+    <string name="restore_fail">Restore failed. :(</string>
 
 
     <string-array name="journal_modes_display">

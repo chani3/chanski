@@ -14,8 +14,8 @@ import java.util.Calendar;
 class DatabaseHelper extends SQLiteOpenHelper{
     private static String TAG = "DatabaseHelper";
     private static final int DATABASE_VERSION = 3;
-    private static Uri BASE_URI = Uri.parse("content://ca.chani.chanski");
 
+    public static Uri BASE_URI = Uri.parse("content://ca.chani.chanski");
     public static final String DATABASE_FILE = "database.db";
     public static final String ID = "_id";
     public static final Journal JOURNAL = new Journal();

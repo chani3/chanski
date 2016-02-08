@@ -7,9 +7,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,8 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     private AbsListView mListView;
     private ListAdapter mAdapter;
+    private ActionMode mActionMode;
+    private ActionModeHandler mActionModeHandler;
     private EditText input;
     private Spinner modeSpinner;
     private String[] modeValues;
@@ -58,6 +61,8 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         }*/
 
         mAdapter = new JournalAdapter(getActivity(), getLoaderManager());
+
+        mActionModeHandler = new ActionModeHandler();
         modeValues = getResources().getStringArray(R.array.journal_modes);
     }
 
@@ -69,9 +74,9 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         // Set up connections
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); //TODO multi
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
-        registerForContextMenu(mListView);
 
         input = (EditText) view.findViewById(R.id.editText);
         input.setOnEditorActionListener(this);
@@ -107,29 +112,60 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        parent.showContextMenuForChild(view);
-        //note: context menu also triggers on longpress. leaving that for now, will enable action mode later.
+        if (mActionMode != null) {
+            return;
+        }
+
+        // Start the CAB using the ActionMode.Callback defined above
+        mActionMode = getActivity().startActionMode(mActionModeHandler);
+        //view.setSelected(true);
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(R.menu.journal_item, menu);
-    }
+    private class ActionModeHandler implements ActionMode.Callback {
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        Log.d(TAG, "selected contextmenu");
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Log.d(TAG, String.format("id: %d position: %d", info.id, info.position));
+        // Called when the action mode is created; startActionMode() was called
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.journal_item, menu);
+            return true;
+        }
 
-        switch (item.getItemId()) {
-            case R.id.action_share:
-                shareItem(info.position);
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but
+        // may be called multiple times if the mode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        // Called when the user selects a contextual menu item
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_share:
+                    shareCurrentItem();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private void shareCurrentItem() {
+            int pos = mListView.getCheckedItemPosition();
+            if (pos == AbsListView.INVALID_POSITION) {
+                Log.d(TAG, "no selection??");
+            } else {
+                Log.d(TAG, String.format("sharing item %d", pos));
+                shareItem(pos);
+            }
+        }
+
+        // Called when the user exits the action mode
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mActionMode = null;
         }
     }
 
@@ -137,6 +173,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         //TODO some sort of helper class for this is probably worthwhile?
         Cursor cursor = (Cursor)mAdapter.getItem(position);
         String text = cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT));
+        Log.d(TAG, String.format("sharing text %s", text));
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);

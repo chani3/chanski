@@ -131,10 +131,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener,
                 return true;
             case R.id.action_backup:
                 doBackup();
+                return true;
             case R.id.action_restore:
                 confirmRestore();
+                return true;
             case R.id.action_force_sync:
                 forceSync();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

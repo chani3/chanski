@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -36,8 +37,6 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     private AbsListView mListView;
     private ListAdapter mAdapter;
-    private ActionMode mActionMode;
-    private ActionModeHandler mActionModeHandler;
     private EditText input;
     private Spinner modeSpinner;
     private String[] modeValues;
@@ -62,7 +61,6 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
         mAdapter = new JournalAdapter(getActivity(), getLoaderManager());
 
-        mActionModeHandler = new ActionModeHandler();
         modeValues = getResources().getStringArray(R.array.journal_modes);
     }
 
@@ -74,7 +72,8 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         // Set up connections
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
-        mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE); //TODO multi
+        mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+        mListView.setMultiChoiceModeListener(new ActionModeHandler());
         mListView.setOnItemClickListener(this);
         mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
@@ -112,20 +111,19 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mActionMode != null) {
-            return;
-        }
-
-        // Start the CAB using the ActionMode.Callback defined above
-        mActionMode = getActivity().startActionMode(mActionModeHandler);
-        //view.setSelected(true);
+        Log.d(TAG, String.format("onItemClick %d", position));
+        mListView.setItemChecked(position, true); //starts multichoice mode
     }
 
-    private class ActionModeHandler implements ActionMode.Callback {
+    /**
+     * Callback handler for action mode, where items are selected and acted on.
+     */
+    private class ActionModeHandler implements AbsListView.MultiChoiceModeListener {
 
         // Called when the action mode is created; startActionMode() was called
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            Log.d(TAG, "onCreateActionMode");
             // Inflate a menu resource providing context menu items
             MenuInflater inflater = mode.getMenuInflater();
             inflater.inflate(R.menu.journal_item, menu);
@@ -144,7 +142,7 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_share:
-                    shareCurrentItem();
+                    shareItems(mListView.getCheckedItemPositions());
                     mode.finish(); // Action picked, so close the CAB
                     return true;
                 default:
@@ -152,30 +150,29 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
             }
         }
 
-        private void shareCurrentItem() {
-            int pos = mListView.getCheckedItemPosition();
-            if (pos == AbsListView.INVALID_POSITION) {
-                Log.d(TAG, "no selection??");
-            } else {
-                Log.d(TAG, String.format("sharing item %d", pos));
-                shareItem(pos);
-            }
-        }
-
         // Called when the user exits the action mode
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             Log.d(TAG, "onDestroyActionMode");
-            mListView.clearChoices(); //un-select all
-            mListView.requestLayout(); //bug workaround
-            mActionMode = null;
+        }
+
+        /// anything that depends on what's checked gets updated here.
+        @Override
+        public void onItemCheckedStateChanged(ActionMode actionMode, int i, long l, boolean b) {
         }
     }
 
-    private void shareItem(int position) {
-        //TODO some sort of helper class for this is probably worthwhile?
-        Cursor cursor = (Cursor)mAdapter.getItem(position);
-        String text = cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT));
+    private void shareItems(SparseBooleanArray positions) {
+        Log.d(TAG, positions.toString());
+        String text = "";
+        for (int i=0; i<positions.size(); i++) {
+            //TODO can we reuse one cursor?
+            if (positions.valueAt(i)) {
+                Cursor cursor = (Cursor) mAdapter.getItem(positions.keyAt(i));
+                text += cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT)) + "\n";
+                //TODO do we want datestamps?
+            }
+        }
         Log.d(TAG, String.format("sharing text %s", text));
 
         Intent sendIntent = new Intent();

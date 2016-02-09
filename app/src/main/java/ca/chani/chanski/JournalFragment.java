@@ -165,6 +165,9 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
         // Called when the user exits the action mode
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            Log.d(TAG, "onDestroyActionMode");
+            mListView.clearChoices(); //un-select all
+            mListView.requestLayout(); //bug workaround
             mActionMode = null;
         }
     }

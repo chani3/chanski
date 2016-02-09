@@ -26,7 +26,7 @@ public class JournalAdapter extends SimpleCursorAdapter  implements LoaderManage
     static final int[] TO_VIEWS = new int[] {android.R.id.text1, android.R.id.text2};
 
     public JournalAdapter(Context context, LoaderManager loaderManager) {
-        super(context, android.R.layout.simple_list_item_2, null, FROM_COLS, TO_VIEWS, 0);
+        super(context, android.R.layout.simple_list_item_activated_2, null, FROM_COLS, TO_VIEWS, 0);
         this.context = context;
         setViewBinder(new JournalViewBinder()); //later I'll probably have to do all of bindView, but let's try this for now
 

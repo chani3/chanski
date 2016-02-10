@@ -24,6 +24,9 @@ import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 /**
  * Journal UI Fragment, both display and input.
  *
@@ -169,8 +172,15 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
             //TODO can we reuse one cursor?
             if (positions.valueAt(i)) {
                 Cursor cursor = (Cursor) mAdapter.getItem(positions.keyAt(i));
+
+                //ugh date formatting; should we stick a helper somewhere?
+                DateFormat formatter = DateFormat.getTimeInstance();
+                long rawDate = cursor.getLong(cursor.getColumnIndex(DatabaseHelper.JOURNAL.DATE));
+                Date date = new Date(rawDate);
+                String formattedDate = formatter.format(date);
+                text += String.format("[%s] ", formattedDate);
+
                 text += cursor.getString(cursor.getColumnIndex(DatabaseHelper.JOURNAL.TEXT)) + "\n";
-                //TODO do we want datestamps?
             }
         }
         Log.d(TAG, String.format("sharing text %s", text));

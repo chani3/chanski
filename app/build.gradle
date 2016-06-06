@@ -13,12 +13,12 @@ repositories {
 }
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 23
+    buildToolsVersion "23"
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 19
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -26,9 +26,10 @@ android {
         release {
         }
     }
+    useLibrary 'org.apache.http.legacy' //FIXME use HttpURLConnection
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:19+'
+    compile 'com.android.support:support-v13:23+'
     compile 'com.loopj.android:android-async-http:1.4.5+'
 }

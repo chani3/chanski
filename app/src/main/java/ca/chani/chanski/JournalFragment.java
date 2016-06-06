@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -194,10 +195,17 @@ public class JournalFragment extends Fragment implements AbsListView.OnItemClick
 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        Log.d(TAG, String.format("actionId %d", actionId));
+        Log.d(TAG, String.format("saving text %s", input.getText().toString()));
         saveJournalEntry(input.getText().toString(), (int)modeSpinner.getSelectedItemId());
-
         input.setText("");
-        return true;
+
+        if (actionId != EditorInfo.IME_NULL) {
+            return true;
+        } else {
+            //prevent double-enter with hardware keyboard
+            return false;
+        }
     }
 
     private void saveJournalEntry(String text, int mode) {
